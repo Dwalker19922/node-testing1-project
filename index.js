@@ -6,10 +6,28 @@
  * EXAMPLE
  * trimProperties({ name: '  jane  ' }) // returns a new object { name: 'jane' }
  */
+const object = { name: '  foo ', age: 'bar ', type: ' baz' }
 function trimProperties(obj) {
   // ✨ implement
+  const copyObj={...obj}
+  const keys = Object.keys(copyObj)
+  const values = Object.values(copyObj)
+  
+  const trimmedArray = keys.map((item,index) =>{
+    const key = item.trim()
+    const value = values[index].trim()
+    const pair ={key,value}
+    return pair
+  })
+ const data= trimmedArray.map(item =>{
+   const newObject ={
+     [item.key]:item.value
+   }
+     return newObject
+  })
+  const returnObject = Object.assign({}, ...data);
+  return returnObject
 }
-
 /**
  * [Exercise 2] trimPropertiesMutation trims in place the properties of an object
  * @param {object} obj - an object with properties that are strings
@@ -20,8 +38,11 @@ function trimProperties(obj) {
  */
 function trimPropertiesMutation(obj) {
   // ✨ implement
+for(let prop in obj) {
+  obj[prop] =obj[prop].trim()
 }
-
+return obj
+}
 /**
  * [Exercise 3] findLargestInteger finds the largest integer in an array of objects { integer: 1 }
  * @param {object[]} integers - an array of objects
@@ -30,8 +51,16 @@ function trimPropertiesMutation(obj) {
  * EXAMPLE
  * findLargestInteger([{ integer: 1 }, { integer: 3 }, { integer: 2 }]) // returns 3
  */
+ const test=[{ integer: 1 }, { integer: 3 }, { integer: 2 }]
 function findLargestInteger(integers) {
   // ✨ implement
+  const numberArray = integers.map(item=>{
+    const [number]=Object.values(item)
+    return number
+  })
+  const largest= Math.max.apply(Math,numberArray)
+  return largest
+
 }
 
 class Counter {
@@ -41,6 +70,7 @@ class Counter {
    */
   constructor(initialNumber) {
     // ✨ initialize whatever properties are needed
+    this.count=initialNumber;
   }
 
   /**
@@ -57,8 +87,17 @@ class Counter {
    */
   countDown() {
     // ✨ implement
-  }
+if(this.count>0){
+return this.count--
 }
+else{
+  return this.count}
+}
+
+}
+
+
+
 
 class Seasons {
   /**
@@ -66,6 +105,8 @@ class Seasons {
    */
   constructor() {
     // ✨ initialize whatever properties are needed
+    this.seasons=["summer","fall","winter","spring"]
+    this.index = -1
   }
 
   /**
@@ -82,6 +123,14 @@ class Seasons {
    */
   next() {
     // ✨ implement
+   if(this.index===3){
+     this.index=0
+     return this.seasons[this.index]
+   }
+    else{
+      this.index++
+      return this.seasons[this.index]
+    }
   }
 }
 
@@ -93,11 +142,14 @@ class Car {
    * @param {number} mpg - miles the car can drive per gallon of gas
    */
   constructor(name, tankSize, mpg) {
+    this.mpg = mpg
     this.odometer = 0 // car initilizes with zero miles
     this.tank = tankSize // car initiazes full of gas
+    this.fuel = tankSize
     // ✨ initialize whatever other properties are needed
   }
 
+  
   /**
    * [Exercise 6B] Car.prototype.drive adds miles to the odometer and consumes fuel according to mpg
    * @param {string} distance - the distance we want the car to drive
@@ -112,9 +164,20 @@ class Car {
    * focus.drive(200) // returns 600 (ran out of gas after 100 miles)
    */
   drive(distance) {
+      let maxDistance = this.fuel * this.mpg
+      if (maxDistance <= distance){
+          this.odometer += maxDistance
+          this.fuel = 0
+      } else {
+        let fuelConsumed = distance / this.mpg
+        this.odometer += distance
+        this.fuel-= fuelConsumed
+      }
+      return this.odometer
     // ✨ implement
   }
 
+  
   /**
    * [Exercise 6C] Adds gallons to the tank
    * @param {number} gallons - the gallons of fuel we want to put in the tank
@@ -127,10 +190,17 @@ class Car {
    * focus.refuel(99) // returns 600 (tank only holds 20)
    */
   refuel(gallons) {
+      if (this.fuel + gallons >= this.tank){
+          this.fuel = this.tank
+      } else {
+        this.fuel += gallons
+      }
+      return this.fuel * this.mpg
     // ✨ implement
   }
 }
 
+  
 /**
  * [Exercise 7] Asynchronously resolves whether a number is even
  * @param {number} number - the number to test for evenness
@@ -150,8 +220,12 @@ class Car {
  *    // error.message is "number must be a number"
  * })
  */
-function isEvenNumberAsync(number) {
+async function isEvenNumberAsync(number) {
   // ✨ implement
+  if (typeof number != "number" || isNaN(number)){
+      return "number must be a number"
+  }
+  return number % 2 == 0 ? true : false
 }
 
 module.exports = {
